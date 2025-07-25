@@ -1,15 +1,16 @@
-#include<iostream>
-#include<string>
-#include<string>
-#include"Data.h"
-#include"Read.h"
-using std::cout;
-using std::endl;
-using std::string;
+#include <iostream>
+#include <string>
+#include <fstream>
+#include "Read.h"
+#include "Read.h"
 
 int main(int argc, char **argv) {
-    ReadFile();
+    std::string FileName;
+    std::cout << "输入文件名 "<< std::endl;
+    std::cin >> FileName;
+    std::ifstream file(FileName);
+    file =OpenFile("")
+    Lines(file);
     cout << Data::GetBLC() << endl;
-    std::cin.get();
     return 0;
 }
