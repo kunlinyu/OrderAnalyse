@@ -1,12 +1,15 @@
 #include<iostream>
 #include<string>
-#include"OrderAnalyse.h"
+#include<string>
+#include"Data.h"
+#include"Read.h"
 using std::cout;
 using std::endl;
 using std::string;
 
 int main(int argc, char **argv) {
-    Data *dptr = ReadFile();
-    cout << dptr->GetBLC() << endl;
+    ReadFile();
+    cout << Data::GetBLC() << endl;
+    std::cin.get();
     return 0;
 }

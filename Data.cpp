@@ -1,39 +1,22 @@
-#include<string>
-using std::string;
+#include"Data.h"
+#include<iostream>
+using std::cout;
+using std::endl;
 
-class Data
-{
-    private:
-    string BatchID;
-    string OS1;
-    string OrderID;
-    string ItemCode;
-    string ItemCount;
-    string Weight;
-    string ship_time;
-    string Date;
-    string Total;
-    string BinLocation;
-    static int BinLocCounter;//BinLocation种类计数器
-    static string BinLocKinds[];//BinLocation种类存储器
-    
-    public:
-    int GetBLC();//返回BinLocation种类数量
-    bool AlreadyHave(string str);//是否已有该种类
-    Data(string BatchID,string OS1,string OrderID,string ItemCode,string ItemCount,string Weight,string ship_time,string Date,string Total,string BinLocation);
+const int HeadingKinds = 10;
 
-};
-
-int Data::BinLocCounter = 0; 
+int Data::BinLocCounter = 0;
+string Data::BinLocKinds[100];
 
 int Data::GetBLC(){
         return BinLocCounter;
     }
-bool Data::AlreadyHave(string str){
+
+bool Data::AlreadyHave(string str) {
         bool flag=0;
-        for(int i=0;i<BinLocCounter;i++)
+        for(int i=BinLocCounter-1;i>=0;i--)
         {
-            if(BinLocKinds[i]==str)
+            if(BinLocKinds[i].compare(str)==0)
         {
             flag=1;
             break;
@@ -42,33 +25,28 @@ bool Data::AlreadyHave(string str){
         return flag;
     }
 
-Data::Data(    
-    string BatchID,
-    string OS1,
-    string OrderID,
-    string ItemCode,
-    string ItemCount,
-    string Weight,
-    string ship_time,
-    string Date,
-    string Total,
-    string BinLocation){
-        this->BatchID=BatchID;
-        this->OS1=OS1;
-        this->OrderID=OrderID;
-        this->ItemCode=ItemCode;
-        this->ItemCount=ItemCount;
-        this->Weight=Weight;
-        this->ship_time=ship_time;
-        this->Date=Date;
-        this->Total=Total;
-        this->BinLocation=BinLocation;
-        if(AlreadyHave(BinLocation))//计数,待封装
-        {
-            BinLocKinds[BinLocCounter]=BinLocation;
-            BinLocCounter++;
-        }
-    }
+bool Data::Init(string str) {
+    int pos1=0,pos2=0;
+    string s;
+    for(int i=0;i<HeadingKinds-1;i++)
+    {
+        pos2=str.find(",",pos2);
+        s=str.substr(pos1,pos2-pos1);
+        pos2=pos1=pos2+1;
+        data.push_back(s);
+    } //提取单个表头
+    str.substr(pos2);
+    data.push_back(s);
+    Count(data[BinLocation]);
+    return 1;
+}
+
+void Data::Count(string str) {
+    if(AlreadyHave(str))
+    return ;
+    BinLocKinds[BinLocCounter]=str;
+    BinLocCounter++;
+}
 
 // 1-SD241115-0073_1
 // 1-SD
