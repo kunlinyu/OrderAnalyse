@@ -10,6 +10,5 @@ using std::string;
 int main(int argc, char **argv) {
     ReadFile();
     cout << Data::GetBLC() << endl;
-    std::cin.get();
     return 0;
 }

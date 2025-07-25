@@ -10,7 +10,7 @@ using std::string;
 
 
 Data* ReadFile() {
-    Data *dptr = new Data[40000];//行数，待改为变量
+    Data *dptr = new Data[41155];//行数，待改为变量
     std::ifstream file("data.csv");
     if (!file.is_open()) {
         cout << "Error" << endl;
@@ -18,11 +18,10 @@ Data* ReadFile() {
     }
     string str;
     std::getline(file, str);
-    for(int i=0;i<40000;i++)
+    for(int i=0;i<41155;i++)
     {
         std::getline(file, str);
         dptr[i].Init(str);
-        
     }
 
     return dptr;
