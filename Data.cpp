@@ -27,7 +27,7 @@ bool Data::Init(string str) {
         s=str.substr(pos1,pos2-pos1);
         pos2=pos1=pos2+1;
         data.push_back(s);
-    } //提取单个表头
+    }
     s=str.substr(pos2);
     data.push_back(s);
     Count(data[BinLocation]);

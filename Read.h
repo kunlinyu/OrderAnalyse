@@ -10,6 +10,7 @@ class CSVReader {
     public:
     bool OpenFile(std::string FileName);
     std::vector<std::string> ScanHeaders();
+    std::vector<std::string> SplitRow(std::string str);
     int ScanRows();
     void Read(Data &data);
 };
