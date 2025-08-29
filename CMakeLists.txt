@@ -2,26 +2,38 @@ cmake_minimum_required(VERSION 3.16)
 
 project(OrderAnalyse-GUI VERSION 0.1 LANGUAGES CXX)
 
+
 set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(ortools_ROOT "/path/to/your/eigen3")
 
 find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets LinguistTools)
 find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets LinguistTools)
 
 set(TS_FILES OrderAnalyse-GUI_zh_CN.ts)
 
-set(PROJECT_SOURCES
-        src/main.cpp
+set(PROJECT_SOURCES_GUI
+        src/main_gui.cpp
         src/main_widget.cpp
         include/gui/main_widget.h
         src/main_widget.ui
         src/chart_widget.cpp
         src/chart_widget.ui
         include/gui/chart_widget.h
+        src/matching_counter_widget.cpp
+        src/filter_widget.cpp
+        include/gui/matching_counter_widget.h
+        include/gui/filter_widget.h
+        src/matching_counter_widget.ui
+        src/filter_widget.ui
+        ${TS_FILES}
+)
+set(PROJECT_SOURCES_CLI
+        src/main_cli.cpp
         ${TS_FILES}
 )
 
@@ -29,14 +41,13 @@ set(PROJECT_SOURCES
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
     qt_add_executable(OrderAnalyse-GUI
         MANUAL_FINALIZATION
-        ${PROJECT_SOURCES}
-        src/matching_counter_widget.cpp
-        src/filter_widget.cpp
-        include/gui/matching_counter_widget.h
-        include/gui/filter_widget.h
-        src/matching_counter_widget.ui
-        src/filter_widget.ui
+        ${PROJECT_SOURCES_GUI}
     )
+    qt_add_executable(OrderAnalyse-CLI
+        MANUAL_FINALIZATION
+        ${PROJECT_SOURCES_CLI}
+    )
+
 
 # Define target properties for Android with Qt 6 as:
 #    set_property(TARGET OrderAnalyse-GUI APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR
@@ -47,14 +58,18 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
 else()
     if(ANDROID)
         add_library(OrderAnalyse-GUI SHARED
-            ${PROJECT_SOURCES}
+            ${PROJECT_SOURCES_GUI}
         )
 # Define properties for Android with Qt 5 after find_package() calls as:
 #    set(ANDROID_PACKAGE_SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/android")
     else()
         add_executable(OrderAnalyse-GUI
-            ${PROJECT_SOURCES}
+            ${PROJECT_SOURCES_GUI}
         )
+        add_executable(OrderAnalyse-CLI
+            ${PROJECT_SOURCES_CLI}
+        )
+
     endif()
 
     qt5_create_translation(QM_FILES ${CMAKE_SOURCE_DIR} ${TS_FILES})
@@ -85,8 +100,11 @@ set_target_properties(OrderAnalyse-GUI PROPERTIES
     WIN32_EXECUTABLE TRUE
 )
 
+find_package(ortools  REQUIRED)
+target_link_libraries(OrderAnalyse-CLI PRIVATE ortools::ortools)
+
 include(GNUInstallDirs)
-include_directories(include/order_analyse include/gui)
+include_directories(include/gui include/order_analyse)
 install(TARGETS OrderAnalyse-GUI
     BUNDLE DESTINATION .
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
@@ -96,3 +114,4 @@ install(TARGETS OrderAnalyse-GUI
 if(QT_VERSION_MAJOR EQUAL 6)
     qt_finalize_executable(OrderAnalyse-GUI)
 endif()
+
